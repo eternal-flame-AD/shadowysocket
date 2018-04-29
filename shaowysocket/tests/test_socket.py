@@ -16,7 +16,7 @@ class echoserver():
     def __init__(self):
         self.conn = socket.socket()
         self.conn.bind(("127.0.0.1", 12300))
-        self.conn.listen()
+        self.conn.listen(5)
         while True:
             conn, address = self.conn.accept()
             conn = shadowysocket.shadowysocket(conn)
