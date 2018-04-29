@@ -50,12 +50,17 @@ def test_socket():
     server = threading.Thread(target=echoserver)
     server.daemon = True
     server.start()
-    client = echoclient()
-    client.send(b"hello world")
-    assert client.recv() == b"hello world127.0.0.1"
-    client.send(b"bye")
-    assert client.recv() == b"bye127.0.0.1"
-    client.close()
+    for _ in range(3):
+        client1 = echoclient()
+        client2 = echoclient()
+        client1.send(b"hello world")
+        assert client1.recv() == b"hello world127.0.0.1"
+        client2.send(b"another client")
+        assert client2.recv() == b"another client127.0.0.1"
+        client1.send(b"bye")
+        assert client1.recv() == b"bye127.0.0.1"
+        client1.close()
+        client2.close()
     time.sleep(0.5)  # wait for connection thread to die
     assert threading.active_count() == 2  # main+server
 
